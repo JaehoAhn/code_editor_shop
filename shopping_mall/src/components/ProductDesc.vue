@@ -38,44 +38,90 @@ export default {
       this.img_url = curr_item["pro_img_url"];
     },
 
-    click_purchase() {
+    click_purchase_now() {
       if (sessionStorage.getItem("user_no") == null) {
         window.location = "/login";
       } else {
-        const date = new Date();
-
-        var user_no = sessionStorage.getItem("user_no");
-        var pro_no = localStorage.getItem("curr_pro_no");
-        var curr_date =
-          date.getFullYear() +
-          "/" +
-          (date.getMonth() + 1) +
-          "/" +
-          date.getDate();
-        console.log(curr_date);
-
-        console.log("hi");
-
-        $.ajax({
-          type: "GET",
-          url:
-            "http://localhost:80/shopping_mall/api/add_purchase.php?user_no=" +
-            user_no +
-            "&pro_no=" +
-            pro_no +
-            "&curr_date=" +
-            curr_date,
-          dataType: "json",
-          success: function (result) {
-            if (result) {
-              console.log(result);
-
-              //Open success alert
-              $('#success_alert').css('display', 'block');
-            }
-          },
-        });
+        $("#purchaseModal").modal("show");
       }
+    },
+
+    click_add_cart() {
+      if (sessionStorage.getItem("user_no") == null) {
+        window.location = "/login";
+      } else {
+        $("#cartModal").modal("show");
+      }
+    },
+
+    click_cart() {
+      const date = new Date();
+
+      var user_no = sessionStorage.getItem("user_no");
+      var pro_no = localStorage.getItem("curr_pro_no");
+      var option = $("#cart_option").find(":selected").val();
+      var quant = $("#cart_quantity").val();
+
+      $.ajax({
+        type: "GET",
+        url:
+          "http://localhost:80/shopping_mall/api/add_user_cart.php?user_no=" +
+          user_no +
+          "&pro_no=" +
+          pro_no +
+          "&option=" +
+          option +
+          "&quant=" +
+          quant,
+        dataType: "json",
+        success: function (result) {
+          if (result) {
+            console.log("success");
+
+            $("#cartModal").modal("hide");
+
+            //Open success alert
+            $("#success_alert_cart").css("display", "block");
+          }
+        },
+      });
+    },
+
+    click_purchase() {
+      const date = new Date();
+
+      var user_no = sessionStorage.getItem("user_no");
+      var pro_no = localStorage.getItem("curr_pro_no");
+      var curr_date =
+        date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+      var option = $("#purchase_option").find(":selected").val();
+      var quant = $("#purchase_quantity").val();
+
+      $.ajax({
+        type: "GET",
+        url:
+          "http://localhost:80/shopping_mall/api/add_purchase.php?user_no=" +
+          user_no +
+          "&pro_no=" +
+          pro_no +
+          "&curr_date=" +
+          curr_date +
+          "&option=" +
+          option +
+          "&quant=" +
+          quant,
+        dataType: "json",
+        success: function (result) {
+          if (result) {
+            console.log("success");
+
+            $("#purchaseModal").modal("hide");
+
+            //Open success alert
+            $("#success_alert_purchase").css("display", "block");
+          }
+        },
+      });
     },
   },
 
@@ -87,27 +133,47 @@ export default {
 </script>
 
 <template>
-  <div id="desc_container" class="d-flex justify-content-center">
+  <div
+    id="desc_container"
+    class="d-flex justify-content-center"
+    style="margin-top: 40px"
+  >
     <div id="desc_info_container">
       <div id="img_btn_purchase">
         <img id="item_img" v-bind:src="img_url" />
 
         <div id="purchase_buttons">
-          <button id="item_add_cart_btn" class="btn btn-dark">
+          <button
+            id="item_add_cart_btn"
+            class="btn btn-dark"
+            v-on:click="click_add_cart"
+          >
             Add to Cart
           </button>
 
           <button
             id="item_purchase_btn"
             class="btn btn-dark"
-            v-on:click="click_purchase"
+            v-on:click="click_purchase_now"
           >
             Purchase Now
           </button>
         </div>
 
-        <div id="success_alert" class="alert alert-success" style="width: 500px; margin-top: 20px; display: none;">
+        <div
+          id="success_alert_purchase"
+          class="alert alert-success"
+          style="width: 500px; margin-top: 20px; display: none"
+        >
           <strong>Success!</strong> Your item is purchased.
+        </div>
+
+        <div
+          id="success_alert_cart"
+          class="alert alert-success"
+          style="width: 500px; margin-top: 20px; display: none"
+        >
+          <strong>Success!</strong> Your item is in your cart.
         </div>
       </div>
 
@@ -157,6 +223,118 @@ export default {
           "
         >
           {{ this.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal - Purchase Now -->
+  <div class="modal" id="purchaseModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Option & Quantitiy</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div style="display: flex">
+            <h1>Options</h1>
+            <select
+              id="purchase_option"
+              class="form-select"
+              style="width: 50%; margin-left: 25px"
+            >
+              <option>Option 1</option>
+              <option>Option 2</option>
+              <option>Option 3</option>
+              <option>Option 4</option>
+            </select>
+          </div>
+
+          <div style="display: flex; margin-top: 20px">
+            <h1>Quantitiy</h1>
+            <input
+              id="purchase_quantity"
+              type="number"
+              class="form-control"
+              style="width: 50%"
+            />
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-dark"
+            data-bs-dismiss="modal"
+            v-on:click="click_purchase"
+          >
+            Purchase
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal - Purchase Now -->
+  <div class="modal" id="cartModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Option & Quantitiy</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+
+        <!-- Modal body Add Cart-->
+        <div class="modal-body">
+          <div style="display: flex">
+            <h1>Options</h1>
+            <select
+              id="cart_option"
+              class="form-select"
+              style="width: 50%; margin-left: 25px"
+            >
+              <option>Option 1</option>
+              <option>Option 2</option>
+              <option>Option 3</option>
+              <option>Option 4</option>
+            </select>
+          </div>
+
+          <div style="display: flex; margin-top: 20px">
+            <h1>Quantitiy</h1>
+            <input
+              id="cart_quantity"
+              type="number"
+              class="form-control"
+              style="width: 50%"
+            />
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-dark"
+            data-bs-dismiss="modal"
+            v-on:click="click_cart"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

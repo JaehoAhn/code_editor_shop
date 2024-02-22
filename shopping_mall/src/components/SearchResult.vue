@@ -9,6 +9,7 @@ export default {
   },
 
   created() {
+    this.user_search = localStorage.getItem('search_result_user_search');
     var num;
 
     $.ajax({

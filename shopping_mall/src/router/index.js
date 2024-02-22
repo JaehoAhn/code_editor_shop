@@ -7,6 +7,7 @@ import SignUpPage from "../components/pages/SignUpPage.vue"
 import AccountPage from "../components/pages/AccountPage.vue"
 import MyOrders from "../components/MyOrders.vue"
 import ProductDescPage from "../components/pages/ProductDescPage.vue"
+import CartPage from "../components/pages/CartPage.vue"
 
 
 const router = createRouter({
@@ -46,6 +47,12 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: AccountPage
+    },
+
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartPage
     },
 
     {

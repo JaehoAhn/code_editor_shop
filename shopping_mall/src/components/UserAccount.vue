@@ -74,20 +74,6 @@ export default {
     <h1 id="history_title">History</h1>
 
     <div id="history_info">
-      <div id="history_uploaded_item">
-        <h2 id="history_category">Uploaded items</h2>
-
-        <div id="history_content">
-          <p id="history_name">{{ uploaded_name[0] }}</p>
-          <p id="history_price">${{ uploaded_price[0] }}</p>
-        </div>
-
-        <div id="history_content">
-          <p id="history_name">{{ uploaded_name[1] }}</p>
-          <p id="history_price">${{ uploaded_price[1] }}</p>
-        </div>
-      </div>
-
       <div id="history_purchased">
         <h2 id="history_category">Purchased items</h2>
 

@@ -48,9 +48,6 @@
         
     };
 
-
-
-
 </script>
 
 <template>
@@ -68,8 +65,7 @@
 
       <div id="navbarTogglerDemo02">
         <a class="nav-link" v-on:click="click_account">Account</a>
-        <a class="nav-link" href="#" style="margin-left: 15px;">Orders</a>
-        <a class="nav-link" href="#" style="margin-left: 15px;">Cart</a>
+        <a class="nav-link" href="/cart" style="margin-left: 15px;">Cart</a>
       </div>
     </nav>
   </div>

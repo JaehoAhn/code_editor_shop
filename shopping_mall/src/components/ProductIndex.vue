@@ -1,4 +1,3 @@
-
 <script>
 import ProductShow from "./ProductShow.vue";
 import SideBar from "./SideBar.vue";
@@ -23,7 +22,19 @@ export default {
   },
   methods: {
     get_products_list() {
-      var searchInput = $("#search_box_input").val();
+      var searchInput = "";
+
+      if (localStorage.getItem('search_result_user_search') != null) {
+        searchInput = localStorage.getItem('search_result_user_search');
+        localStorage.removeItem('search_result_user_search');
+      }
+
+      else {
+        searchInput = $("#search_box_input").val();
+      }
+
+
+
       var side_level_rate = $("input[name='level_rate']:checked").val();
       var side_level_price = $("input[name='level_price']:checked").val();
 
@@ -31,7 +42,13 @@ export default {
 
       $.ajax({
         type: "GET",
-        url: "http://localhost:80/shopping_mall/api/get_product.php?searchInput=" + searchInput + "&side_level_rate=" + side_level_rate + "&side_level_price=" + side_level_price,
+        url:
+          "http://localhost:80/shopping_mall/api/get_product.php?searchInput=" +
+          searchInput +
+          "&side_level_rate=" +
+          side_level_rate +
+          "&side_level_price=" +
+          side_level_price,
         async: false,
         dataType: "json",
         success: function (result) {
@@ -54,25 +71,21 @@ export default {
         this.rate.push(data[i]["pro_rate"]);
         this.img_url.push(data[i]["pro_img_url"]);
       }
-
-
     },
 
     click_product_show(n) {
       localStorage.setItem("curr_pro_no", n);
-      window.location = '/shop_detail'
+      window.location = "/shop_detail";
     },
 
     get_num_data() {
       return this.product_no.length;
-    }
-
-    
+    },
   },
-  
+
   created() {
     this.get_products_list();
-  }
+  },
 };
 </script>
 
